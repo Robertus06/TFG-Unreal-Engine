@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "Onyx/Public/AbilitySystem/OnyxAbilitySystemComponent.h"
 #include "Onyx/Public/AbilitySystem/OnyxAttributeSet.h"
+#include "Abilities/GameplayAbility.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -94,6 +95,20 @@ void AOnyxCharacter::InitializeAttributes()
 	EffectContext.AddSourceObject(this);
 
 	AbilitySystemComponent->ApplyGameplayEffectToSelf(DefaultAttributes.GetDefaultObject(), 0, EffectContext);
+}
+
+void AOnyxCharacter::GiveAbilities()
+{
+	if (!IsValid(AbilitySystemComponent))
+	{
+		return;
+	}
+
+	for (TSubclassOf<UGameplayAbility>& StartAbility : CharacterAbilities)
+	{
+		AbilitySystemComponent->GiveAbility(
+			FGameplayAbilitySpec(StartAbility, 1, INDEX_NONE, this));
+	}
 }
 
 

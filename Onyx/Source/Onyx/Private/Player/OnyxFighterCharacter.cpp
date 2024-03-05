@@ -3,3 +3,9 @@
 
 #include "Player/OnyxFighterCharacter.h"
 
+void AOnyxFighterCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	GiveAbilities();
+}

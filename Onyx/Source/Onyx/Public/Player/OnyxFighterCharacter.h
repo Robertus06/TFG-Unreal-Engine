@@ -13,5 +13,8 @@ UCLASS()
 class ONYX_API AOnyxFighterCharacter : public AOnyxCharacter
 {
 	GENERATED_BODY()
+
+public:
+	virtual void BeginPlay() override;
 	
 };
