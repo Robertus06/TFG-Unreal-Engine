@@ -23,6 +23,11 @@ class ONYX_API UOnyxAttributeSet : public UAttributeSet
 	GENERATED_BODY()
 
 public:
+
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+
 		UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UOnyxAttributeSet, Health)
@@ -91,6 +96,10 @@ public:
 	FGameplayAttributeData OnyxShards;
 	ATTRIBUTE_ACCESSORS(UOnyxAttributeSet, OnyxShards)
 
+		UPROPERTY(BlueprintReadOnly, Category = "Attributes")
+	FGameplayAttributeData Shield;
+	ATTRIBUTE_ACCESSORS(UOnyxAttributeSet, Shield)
+
 	//	LIMIT ATTRIBUTES
 		UPROPERTY(BlueprintReadOnly, Category = "Attributes")
 	FGameplayAttributeData MaxHealth;
@@ -109,4 +118,6 @@ public:
 	FGameplayAttributeData MagicDamage;
 	ATTRIBUTE_ACCESSORS(UOnyxAttributeSet, MagicDamage)
 
+protected:
+	void ChangeAttributeMaxValue(FGameplayAttributeData& BaseAttribute, FGameplayAttributeData& MaxAttribute, float NewMax, const FGameplayAttribute& BaseAttributeProperty);
 };
