@@ -16,12 +16,12 @@ struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-UCLASS(config=Game)
+UCLASS(config = Game)
 class AOnyxCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
-	
+
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
@@ -30,18 +30,20 @@ class AOnyxCharacter : public ACharacter, public IAbilitySystemInterface
 
 protected:
 
-	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	class UOnyxAbilitySystemComponent* AbilitySystemComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	const class UOnyxAttributeSet* OnyxAttributeSet;
-	UPROPERTY(EditAnywhere,BlueprintReadOnly,Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class UGameplayEffect> DefaultAttributes;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	TArray<TSubclassOf<UGameplayEffect>> InitialEffects;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> CharacterAbilities;
 
 public:
 	AOnyxCharacter();
-	
+
 	// To add mapping context
 	virtual void BeginPlay() override;
 
@@ -50,6 +52,7 @@ protected:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 	virtual void InitializeAttributes();
+	virtual void InitializeEffects();
 	virtual void GiveAbilities();
 };
 

@@ -23,7 +23,7 @@ AOnyxCharacter::AOnyxCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -66,12 +66,13 @@ void AOnyxCharacter::BeginPlay()
 		}
 	}
 
-	if(IsValid(AbilitySystemComponent))
+	if (IsValid(AbilitySystemComponent))
 	{
 		OnyxAttributeSet = AbilitySystemComponent->GetSet<UOnyxAttributeSet>();
 	}
 
 	InitializeAttributes();
+	InitializeEffects();
 }
 
 UAbilitySystemComponent* AOnyxCharacter::GetAbilitySystemComponent() const
@@ -95,6 +96,22 @@ void AOnyxCharacter::InitializeAttributes()
 	EffectContext.AddSourceObject(this);
 
 	AbilitySystemComponent->ApplyGameplayEffectToSelf(DefaultAttributes.GetDefaultObject(), 0, EffectContext);
+}
+
+void AOnyxCharacter::InitializeEffects()
+{
+	if (!IsValid(AbilitySystemComponent))
+	{
+		return;
+	}
+
+	for (auto Effect : InitialEffects)
+	{
+		FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+		EffectContext.AddSourceObject(this);
+
+		AbilitySystemComponent->ApplyGameplayEffectToSelf(Effect.GetDefaultObject(), 0, EffectContext);
+	}
 }
 
 void AOnyxCharacter::GiveAbilities()
