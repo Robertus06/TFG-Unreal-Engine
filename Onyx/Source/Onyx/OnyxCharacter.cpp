@@ -69,6 +69,8 @@ void AOnyxCharacter::BeginPlay()
 	if (IsValid(AbilitySystemComponent))
 	{
 		OnyxAttributeSet = AbilitySystemComponent->GetSet<UOnyxAttributeSet>();
+
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetHealthAttribute()).AddUObject(this, &AOnyxCharacter::OnHealthAttributeUpdate);
 	}
 
 	InitializeAttributes();
@@ -127,6 +129,16 @@ void AOnyxCharacter::GiveAbilities()
 			FGameplayAbilitySpec(StartAbility, 1, INDEX_NONE, this));
 	}
 }
+
+void AOnyxCharacter::OnHealthAttributeUpdate(const FOnAttributeChangeData& Data)
+{
+	if (Data.NewValue > 0)
+	{
+		HealthChangedEvent(CharacterID, Data.NewValue / OnyxAttributeSet->GetMaxHealth());
+	}
+}
+
+
 
 
 #pragma region Inputs

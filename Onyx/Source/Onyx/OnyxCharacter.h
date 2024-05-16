@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "AbilitySystemInterface.h"
@@ -41,6 +42,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> CharacterAbilities;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	int32 CharacterID;
+
 public:
 	AOnyxCharacter();
 
@@ -54,5 +58,10 @@ protected:
 	virtual void InitializeAttributes();
 	virtual void InitializeEffects();
 	virtual void GiveAbilities();
+
+	void OnHealthAttributeUpdate(const FOnAttributeChangeData& Data);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void HealthChangedEvent(int32 Character, float Percentage);
 };
 
