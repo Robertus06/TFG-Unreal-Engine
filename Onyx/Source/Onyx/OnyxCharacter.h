@@ -60,8 +60,22 @@ protected:
 	virtual void GiveAbilities();
 
 	void OnHealthAttributeUpdate(const FOnAttributeChangeData& Data);
+	void OnManaAttributeUpdate(const FOnAttributeChangeData& Data);
+	void OnShieldAttributeUpdate(const FOnAttributeChangeData& Data);
+	void OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data);
+
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void HealthChangedEvent(int32 Character, float Percentage);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ManaChangedEvent(int32 Character, float Percentage);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ShieldChangedEvent(int32 Character, float Percentage);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnyxChangedEvent(int32 Character, float Value);
 };
+
 

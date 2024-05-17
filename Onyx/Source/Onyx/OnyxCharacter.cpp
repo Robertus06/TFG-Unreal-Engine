@@ -71,6 +71,9 @@ void AOnyxCharacter::BeginPlay()
 		OnyxAttributeSet = AbilitySystemComponent->GetSet<UOnyxAttributeSet>();
 
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetHealthAttribute()).AddUObject(this, &AOnyxCharacter::OnHealthAttributeUpdate);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetManaAttribute()).AddUObject(this, &AOnyxCharacter::OnManaAttributeUpdate);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetShieldAttribute()).AddUObject(this, &AOnyxCharacter::OnShieldAttributeUpdate);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetOnyxShardsAttribute()).AddUObject(this, &AOnyxCharacter::OnOnyxAttributeUpdate);
 	}
 
 	InitializeAttributes();
@@ -138,7 +141,20 @@ void AOnyxCharacter::OnHealthAttributeUpdate(const FOnAttributeChangeData& Data)
 	}
 }
 
+void AOnyxCharacter::OnManaAttributeUpdate(const FOnAttributeChangeData& Data)
+{
+	ManaChangedEvent(CharacterID, Data.NewValue / OnyxAttributeSet->GetMaxMana());
+}
 
+void AOnyxCharacter::OnShieldAttributeUpdate(const FOnAttributeChangeData& Data)
+{
+	ShieldChangedEvent(CharacterID, Data.NewValue / OnyxAttributeSet->GetMaxHealth());
+}
+
+void AOnyxCharacter::OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data)
+{
+	OnyxChangedEvent(CharacterID, Data.NewValue);
+}
 
 
 #pragma region Inputs
