@@ -20,13 +20,13 @@ AMainCamera::AMainCamera()
 	Camera->SetupAttachment(SpringArm);
 
 	SpringArm->TargetArmLength = ArmLengthRange.Min;
-
 }
 
 // Called when the game starts or when spawned
 void AMainCamera::BeginPlay()
 {
 	Super::BeginPlay();
+	TargetLocation = GetActorLocation();
 }
 
 void AMainCamera::InitializeCamera()

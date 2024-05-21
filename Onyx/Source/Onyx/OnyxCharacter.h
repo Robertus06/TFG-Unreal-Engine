@@ -63,6 +63,7 @@ protected:
 	void OnManaAttributeUpdate(const FOnAttributeChangeData& Data);
 	void OnShieldAttributeUpdate(const FOnAttributeChangeData& Data);
 	void OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data);
+	void OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData& Data);
 
 
 	UFUNCTION(BlueprintImplementableEvent)

@@ -74,6 +74,7 @@ void AOnyxCharacter::BeginPlay()
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetManaAttribute()).AddUObject(this, &AOnyxCharacter::OnManaAttributeUpdate);
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetShieldAttribute()).AddUObject(this, &AOnyxCharacter::OnShieldAttributeUpdate);
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetOnyxShardsAttribute()).AddUObject(this, &AOnyxCharacter::OnOnyxAttributeUpdate);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetMovementSpeedAttribute()).AddUObject(this, &AOnyxCharacter::OnMovementSpeedAttributeUpdate);
 	}
 
 	InitializeAttributes();
@@ -154,6 +155,14 @@ void AOnyxCharacter::OnShieldAttributeUpdate(const FOnAttributeChangeData& Data)
 void AOnyxCharacter::OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data)
 {
 	OnyxChangedEvent(CharacterID, Data.NewValue);
+}
+
+void AOnyxCharacter::OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData& Data)
+{
+	if (UCharacterMovementComponent* Movement = GetCharacterMovement())
+	{
+		Movement->MaxWalkSpeed = Data.NewValue;
+	}
 }
 
 
