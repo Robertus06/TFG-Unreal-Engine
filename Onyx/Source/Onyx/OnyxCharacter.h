@@ -44,6 +44,8 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	int32 CharacterID;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* DeadAnimation;
 
 public:
 	AOnyxCharacter();
@@ -64,7 +66,7 @@ protected:
 	void OnShieldAttributeUpdate(const FOnAttributeChangeData& Data);
 	void OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data);
 	void OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData& Data);
-
+	void Dead();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void HealthChangedEvent(int32 Character, float Percentage);

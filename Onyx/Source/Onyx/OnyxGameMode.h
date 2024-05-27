@@ -13,6 +13,8 @@ class AOnyxGameMode : public AGameModeBase
 
 public:
 	AOnyxGameMode();
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayerDead(int PlayerID);
 };
 
 

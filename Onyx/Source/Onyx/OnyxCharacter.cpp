@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "OnyxGameMode.h"
 #include "Onyx/Public/AbilitySystem/OnyxAbilitySystemComponent.h"
 #include "Onyx/Public/AbilitySystem/OnyxAttributeSet.h"
 #include "Abilities/GameplayAbility.h"
@@ -140,6 +141,11 @@ void AOnyxCharacter::OnHealthAttributeUpdate(const FOnAttributeChangeData& Data)
 	{
 		HealthChangedEvent(CharacterID, Data.NewValue / OnyxAttributeSet->GetMaxHealth());
 	}
+	else if(Data.NewValue <= 0)
+	{
+		HealthChangedEvent(CharacterID, 0.f);
+		Dead();
+	}
 }
 
 void AOnyxCharacter::OnManaAttributeUpdate(const FOnAttributeChangeData& Data)
@@ -162,6 +168,20 @@ void AOnyxCharacter::OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData
 	if (UCharacterMovementComponent* Movement = GetCharacterMovement())
 	{
 		Movement->MaxWalkSpeed = Data.NewValue;
+	}
+}
+
+void AOnyxCharacter::Dead()
+{
+	PlayAnimMontage(DeadAnimation);
+	if(const auto PC = GetLocalViewingPlayerController())
+	{
+		DisableInput(PC);
+	}
+	AOnyxGameMode* GameMode = GetWorld()->GetAuthGameMode<AOnyxGameMode>();
+	if(GameMode)
+	{
+		GameMode->PlayerDead(CharacterID);
 	}
 }
 
