@@ -141,7 +141,7 @@ void AOnyxCharacter::OnHealthAttributeUpdate(const FOnAttributeChangeData& Data)
 	{
 		HealthChangedEvent(CharacterID, Data.NewValue / OnyxAttributeSet->GetMaxHealth());
 	}
-	else if(Data.NewValue <= 0)
+	else if (Data.NewValue <= 0)
 	{
 		HealthChangedEvent(CharacterID, 0.f);
 		Dead();
@@ -173,16 +173,42 @@ void AOnyxCharacter::OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData
 
 void AOnyxCharacter::Dead()
 {
-	PlayAnimMontage(DeadAnimation);
-	if(const auto PC = GetLocalViewingPlayerController())
+	//Dead animation
+	if (DeadAnimation)
+	{
+		float Duration = PlayAnimMontage(DeadAnimation);
+		GetWorldTimerManager().SetTimer(DeadAnimTimer, this, &AOnyxCharacter::PostDeadAnim, Duration);
+
+	}
+	//Disable Input to Controller
+	if (const auto PC = GetLocalViewingPlayerController())
 	{
 		DisableInput(PC);
 	}
+	//Notify dead to game mode
 	AOnyxGameMode* GameMode = GetWorld()->GetAuthGameMode<AOnyxGameMode>();
-	if(GameMode)
+	if (GameMode)
 	{
 		GameMode->PlayerDead(CharacterID);
 	}
+
+	//Remove all active effects (Healing, mana regen ...)
+	FGameplayTagContainer TempTag;
+	TempTag.AddTag(FGameplayTag::RequestGameplayTag(FName("State")));
+	AbilitySystemComponent->RemoveActiveEffectsWithAppliedTags(TempTag);
+
+	//Set Dead Tag by an infinite effect to avoid receiving damage, etc..
+	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+	AbilitySystemComponent->ApplyGameplayEffectToSelf(DeadEffect.GetDefaultObject(), 0, EffectContext);
+}
+
+void AOnyxCharacter::PostDeadAnim()
+{
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	GetRootComponent()->SetHiddenInGame(true);
+	GetWorldTimerManager().ClearTimer(DeadAnimTimer);
 }
 
 

@@ -40,12 +40,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<UGameplayEffect>> InitialEffects;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UGameplayEffect> DeadEffect;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> CharacterAbilities;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	int32 CharacterID;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* DeadAnimation;
+
+	FTimerHandle DeadAnimTimer;
 
 public:
 	AOnyxCharacter();
@@ -67,6 +71,8 @@ protected:
 	void OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data);
 	void OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData& Data);
 	void Dead();
+
+	void PostDeadAnim();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void HealthChangedEvent(int32 Character, float Percentage);
