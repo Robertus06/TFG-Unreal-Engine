@@ -177,7 +177,7 @@ void AOnyxCharacter::Dead()
 	if (DeadAnimation)
 	{
 		float Duration = PlayAnimMontage(DeadAnimation);
-		GetWorldTimerManager().SetTimer(DeadAnimTimer, this, &AOnyxCharacter::PostDeadAnim, Duration);
+		GetWorldTimerManager().SetTimer(DeadAnimTimer, this, &AOnyxCharacter::PostDeadAnim, Duration * 0.9);
 
 	}
 	//Disable Input to Controller
@@ -205,9 +205,11 @@ void AOnyxCharacter::Dead()
 
 void AOnyxCharacter::PostDeadAnim()
 {
+	if (OnyxAttributeSet && AbilitySystemComponent)
+		AbilitySystemComponent->SetNumericAttributeBase(OnyxAttributeSet->GetManaAttribute(), 0.0f);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-	GetRootComponent()->SetHiddenInGame(true);
+	GetRootComponent()->SetHiddenInGame(true, true);
 	GetWorldTimerManager().ClearTimer(DeadAnimTimer);
 }
 
