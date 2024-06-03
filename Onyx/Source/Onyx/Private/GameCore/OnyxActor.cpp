@@ -15,8 +15,6 @@ AOnyxActor::AOnyxActor()
 	AbilitySystemComponent = CreateDefaultSubobject<UOnyxAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	OnyxAttributeSet = CreateDefaultSubobject<UOnyxAttributeSet>(TEXT("AttributeSet"));
 
-	InitializeAttributes();
-	InitializeEffects();
 }
 
 // Called when the game starts or when spawned
@@ -28,6 +26,8 @@ void AOnyxActor::BeginPlay()
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(OnyxAttributeSet->GetHealthAttribute()).AddUObject(this, &AOnyxActor::OnHealthAttributeUpdate);
 
 	}
+	InitializeAttributes();
+	InitializeEffects();
 }
 
 UAbilitySystemComponent* AOnyxActor::GetAbilitySystemComponent() const
@@ -82,7 +82,13 @@ void AOnyxActor::OnHealthAttributeUpdate(const FOnAttributeChangeData& Data)
 
 	if(Data.NewValue <= 0.0f)
 	{
-		DeadEvent(Data.GEModData->EffectSpec.GetEffectContext().GetInstigator());
+		if(LastHitter)
+			DeadEvent(LastHitter);
+
+		//Remove all active effects (Healing, mana regen ...)
+		FGameplayTagContainer TempTag;
+		TempTag.AddTag(FGameplayTag::RequestGameplayTag(FName("State")));
+		AbilitySystemComponent->RemoveActiveEffectsWithAppliedTags(TempTag);
 	}
 
 }

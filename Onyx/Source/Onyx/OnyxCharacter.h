@@ -59,6 +59,8 @@ public:
 	// To add mapping context
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void DamageEvent(float Number);
 
 protected:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -87,6 +89,7 @@ protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnyxChangedEvent(int32 Character, float Value);
+
 };
 
 

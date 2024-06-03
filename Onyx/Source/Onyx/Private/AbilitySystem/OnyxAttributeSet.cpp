@@ -4,6 +4,7 @@
 #include "AbilitySystem/OnyxAttributeSet.h"
 #include "GameplayEffectExtension.h"
 #include "./Onyx/OnyxCharacter.h"
+#include "GameCore/OnyxActor.h"
 
 void UOnyxAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
@@ -62,6 +63,8 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
 	}
+
+
 	//Damage
 	else if (Data.EvaluatedData.Attribute == GetPhysicalDamageAttribute())
 	{
@@ -92,6 +95,18 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				GetShieldAttribute().SetNumericValueChecked(CurrentShield, this);
 			}
 			const float NewHealth = GetHealth() - DamageDone;
+
+			if (AOnyxActor* Actor = Cast<AOnyxActor>(TargetActor))
+			{
+				Actor->LastHitter = SourceASC->AbilityActorInfo->AvatarActor.Get();
+				if (DamageDone > 0)
+					Actor->DamageEvent(DamageDone);
+			}
+			else if (TargetCharacter && (TargetASC != SourceASC))
+			{
+				if (DamageDone > 0)
+					TargetCharacter->DamageEvent(DamageDone);
+			}
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 		}
 	}
@@ -124,6 +139,19 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 			}
 			const float NewHealth = GetHealth() - DamageDone;
+
+			if (AOnyxActor* Actor = Cast<AOnyxActor>(TargetActor))
+			{
+				Actor->LastHitter = SourceASC->AbilityActorInfo->AvatarActor.Get();
+				if (DamageDone > 0)
+					Actor->DamageEvent(DamageDone);
+			}
+			else if (TargetCharacter && (TargetASC != SourceASC))
+			{
+				if (DamageDone > 0)
+					TargetCharacter->DamageEvent(DamageDone);
+			}
+
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 		}
 	}

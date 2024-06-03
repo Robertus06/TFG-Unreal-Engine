@@ -17,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	AOnyxActor();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void DamageEvent(float Number);
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,8 +39,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-
+	
+	UPROPERTY()
+	AActor* LastHitter;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
@@ -49,4 +52,5 @@ protected:
 	TSubclassOf<class UGameplayEffect> DefaultAttributes;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<UGameplayEffect>> InitialEffects;
+
 };
