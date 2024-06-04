@@ -18,7 +18,7 @@ public:
 	AOnyxActor();
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void DamageEvent(float Number);
+	void DamageEvent(float Number, int Type);
 
 protected:
 	// Called when the game starts or when spawned

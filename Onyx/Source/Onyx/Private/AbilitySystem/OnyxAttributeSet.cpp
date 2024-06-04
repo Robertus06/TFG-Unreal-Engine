@@ -73,6 +73,7 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		float PhysicalResistenceCoeficient = 100.f / (100.f + (GetArmor() * (1 - FMath::Clamp(PhysicalPenetration, 0.f, 1.f))));
 
 		float DamageDone = GetPhysicalDamage() * PhysicalResistenceCoeficient;
+		int DamageType = 1;
 		SetPhysicalDamage(0.f);
 
 		if (DamageDone > 0.f)
@@ -100,12 +101,12 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			{
 				Actor->LastHitter = SourceASC->AbilityActorInfo->AvatarActor.Get();
 				if (DamageDone > 0)
-					Actor->DamageEvent(DamageDone);
+					Actor->DamageEvent(DamageDone, DamageType);
 			}
 			else if (TargetCharacter && (TargetASC != SourceASC))
 			{
 				if (DamageDone > 0)
-					TargetCharacter->DamageEvent(DamageDone);
+					TargetCharacter->DamageEvent(DamageDone, DamageType);
 			}
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 		}
@@ -116,6 +117,7 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		float MagicPenetration = SourceASC->GetGameplayAttributeValue(GetMagicPerforationAttribute(), Found);
 		float MagicResistenceCoeficient = 100.f / (100.f + (GetMagicResistence() * (1 - FMath::Clamp(MagicPenetration, 0.f, 1.f))));
 		float DamageDone = GetMagicDamage() * MagicResistenceCoeficient;
+		int DamageType = 2;
 		SetMagicDamage(0.f);
 
 		if (DamageDone > 0.f)
@@ -144,12 +146,12 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 			{
 				Actor->LastHitter = SourceASC->AbilityActorInfo->AvatarActor.Get();
 				if (DamageDone > 0)
-					Actor->DamageEvent(DamageDone);
+					Actor->DamageEvent(DamageDone, DamageType);
 			}
 			else if (TargetCharacter && (TargetASC != SourceASC))
 			{
 				if (DamageDone > 0)
-					TargetCharacter->DamageEvent(DamageDone);
+					TargetCharacter->DamageEvent(DamageDone, DamageType);
 			}
 
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));

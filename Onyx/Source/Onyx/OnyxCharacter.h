@@ -60,7 +60,7 @@ public:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void DamageEvent(float Number);
+	void DamageEvent(float Number, int Type);
 
 protected:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
