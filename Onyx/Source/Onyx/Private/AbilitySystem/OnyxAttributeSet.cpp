@@ -41,6 +41,11 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	FGameplayEffectContextHandle ContextHandle = Data.EffectSpec.GetContext();
 	UAbilitySystemComponent* SourceASC = ContextHandle.GetOriginalInstigatorAbilitySystemComponent();
 
+	FGameplayTagContainer EffectTags;
+	Data.EffectSpec.GetAllAssetTags(EffectTags);
+	bool Critic = EffectTags.HasTag(FGameplayTag::RequestGameplayTag(FName("Critic")));
+
+
 	//Target Actor of effect (Attributes owner) info
 	AActor* TargetActor = nullptr;
 	AController* TargetController = nullptr;
@@ -73,7 +78,8 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		float PhysicalResistenceCoeficient = 100.f / (100.f + (GetArmor() * (1 - FMath::Clamp(PhysicalPenetration, 0.f, 1.f))));
 
 		float DamageDone = GetPhysicalDamage() * PhysicalResistenceCoeficient;
-		int DamageType = 1;
+
+		int DamageType = Critic ? 3 : 1;
 		SetPhysicalDamage(0.f);
 
 		if (DamageDone > 0.f)
@@ -117,7 +123,7 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 		float MagicPenetration = SourceASC->GetGameplayAttributeValue(GetMagicPerforationAttribute(), Found);
 		float MagicResistenceCoeficient = 100.f / (100.f + (GetMagicResistence() * (1 - FMath::Clamp(MagicPenetration, 0.f, 1.f))));
 		float DamageDone = GetMagicDamage() * MagicResistenceCoeficient;
-		int DamageType = 2;
+		int DamageType = Critic ? 3 : 2;
 		SetMagicDamage(0.f);
 
 		if (DamageDone > 0.f)
