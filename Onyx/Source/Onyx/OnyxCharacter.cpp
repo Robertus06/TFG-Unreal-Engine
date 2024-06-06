@@ -160,7 +160,7 @@ void AOnyxCharacter::OnShieldAttributeUpdate(const FOnAttributeChangeData& Data)
 
 void AOnyxCharacter::OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data)
 {
-	OnyxChangedEvent(CharacterID, Data.NewValue);
+	OnyxChangedEvent(CharacterID, Data.NewValue, Data.NewValue-Data.OldValue);	
 }
 
 void AOnyxCharacter::OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData& Data)

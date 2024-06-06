@@ -88,8 +88,7 @@ protected:
 	void ShieldChangedEvent(int32 Character, float Percentage);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnyxChangedEvent(int32 Character, float Value);
-
+	void OnyxChangedEvent(int32 Character, float Value, float Receive);
 };
 
 
