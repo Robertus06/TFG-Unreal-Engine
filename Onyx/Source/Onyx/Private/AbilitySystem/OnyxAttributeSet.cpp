@@ -19,7 +19,7 @@ void UOnyxAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	}
 	if (Attribute == GetMovementSpeedAttribute())
 	{
-		NewValue = FMath::Clamp<float>(NewValue, 150.f, 1200.f);
+		NewValue = FMath::Clamp<float>(NewValue, 0.f, 1200.f);
 	}
 }
 
