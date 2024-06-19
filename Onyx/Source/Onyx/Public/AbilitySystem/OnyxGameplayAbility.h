@@ -18,7 +18,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Mana Cost")
 	FScalableFloat ManaCost;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category="Cooldown")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Cooldown")
 	FScalableFloat CooldownDuration;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Cooldown")
