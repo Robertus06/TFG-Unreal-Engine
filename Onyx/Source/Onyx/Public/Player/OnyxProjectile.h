@@ -20,7 +20,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability System")
 	class UAbilitySystemComponent* OwnerAsc;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability System")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability System", meta = (ExposeOnSpawn = "true"))
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)

@@ -52,6 +52,7 @@ protected:
 	UAnimMontage* DeadAnimation;
 
 	FTimerHandle DeadAnimTimer;
+	bool bIsDead = false;
 
 public:
 	AOnyxCharacter();

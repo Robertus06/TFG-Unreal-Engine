@@ -143,8 +143,11 @@ void AOnyxCharacter::OnHealthAttributeUpdate(const FOnAttributeChangeData& Data)
 	}
 	else if (Data.NewValue <= 0)
 	{
-		HealthChangedEvent(CharacterID, 0.f);
-		Dead();
+		if (!bIsDead)
+		{
+			HealthChangedEvent(CharacterID, 0.f);
+			Dead();
+		}
 	}
 }
 
@@ -160,7 +163,7 @@ void AOnyxCharacter::OnShieldAttributeUpdate(const FOnAttributeChangeData& Data)
 
 void AOnyxCharacter::OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data)
 {
-	OnyxChangedEvent(CharacterID, Data.NewValue, Data.NewValue-Data.OldValue);	
+	OnyxChangedEvent(CharacterID, Data.NewValue, Data.NewValue - Data.OldValue);
 }
 
 void AOnyxCharacter::OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData& Data)
@@ -173,6 +176,7 @@ void AOnyxCharacter::OnMovementSpeedAttributeUpdate(const FOnAttributeChangeData
 
 void AOnyxCharacter::Dead()
 {
+	bIsDead = true;
 	//Dead animation
 	if (DeadAnimation)
 	{
@@ -185,12 +189,7 @@ void AOnyxCharacter::Dead()
 	{
 		DisableInput(PC);
 	}
-	//Notify dead to game mode
-	AOnyxGameMode* GameMode = GetWorld()->GetAuthGameMode<AOnyxGameMode>();
-	if (GameMode)
-	{
-		GameMode->PlayerDead(CharacterID);
-	}
+	
 
 	//Remove all active effects (Healing, mana regen ...)
 	FGameplayTagContainer TempTag;
@@ -205,11 +204,22 @@ void AOnyxCharacter::Dead()
 
 void AOnyxCharacter::PostDeadAnim()
 {
+	//Notify dead to game mode
+	AOnyxGameMode* GameMode = GetWorld()->GetAuthGameMode<AOnyxGameMode>();
+	if (GameMode)
+	{
+		GameMode->PlayerDead(CharacterID);
+	}
+	//Set Mana to 0
 	if (OnyxAttributeSet && AbilitySystemComponent)
 		AbilitySystemComponent->SetNumericAttributeBase(OnyxAttributeSet->GetManaAttribute(), 0.0f);
+	//Disable Collision in game
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Pawn, ECR_Ignore);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
+	//Make Invisible in game
 	GetRootComponent()->SetHiddenInGame(true, true);
+
+	//Clear timer
 	GetWorldTimerManager().ClearTimer(DeadAnimTimer);
 }
 
