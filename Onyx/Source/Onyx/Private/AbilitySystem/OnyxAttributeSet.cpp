@@ -91,12 +91,20 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				{
 					//TargetASC->ApplyModToAttributeUnsafe(GetShieldAttribute(), EGameplayModOp::Additive, -CurrentShield);
 					DamageDone -= CurrentShield;
+					if (TargetCharacter && (TargetASC != SourceASC) && CurrentShield > 0)
+					{
+						TargetCharacter->DamageEvent(CurrentShield, 0);
+					}
 					CurrentShield = 0.f;
 				}
 				else
 				{
 					//TargetASC->ApplyModToAttributeUnsafe(GetShieldAttribute(), EGameplayModOp::Additive, -DamageDone);
 					CurrentShield -= DamageDone;
+					if (TargetCharacter && (TargetASC != SourceASC) && DamageDone > 0)
+					{
+						TargetCharacter->DamageEvent(DamageDone, 0);
+					}
 					DamageDone = 0.f;
 				}
 				GetShieldAttribute().SetNumericValueChecked(CurrentShield, this);
@@ -135,12 +143,20 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 				{
 					//TargetASC->ApplyModToAttributeUnsafe(GetShieldAttribute(), EGameplayModOp::Additive, -CurrentShield);
 					DamageDone -= CurrentShield;
+					if (TargetCharacter && (TargetASC != SourceASC) && CurrentShield > 0)
+					{
+						TargetCharacter->DamageEvent(CurrentShield, 0);
+					}
 					CurrentShield = 0.f;
 				}
 				else
 				{
 					//TargetASC->ApplyModToAttributeUnsafe(GetShieldAttribute(), EGameplayModOp::Additive, -DamageDone);
 					CurrentShield -= DamageDone;
+					if (TargetCharacter && (TargetASC != SourceASC) && DamageDone > 0)
+					{
+						TargetCharacter->DamageEvent(DamageDone, 0);
+					}
 					DamageDone = 0.f;
 				}
 				GetShieldAttribute().SetNumericValueChecked(CurrentShield, this);
