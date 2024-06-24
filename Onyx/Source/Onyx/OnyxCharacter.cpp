@@ -137,6 +137,9 @@ void AOnyxCharacter::GiveAbilities()
 
 void AOnyxCharacter::OnHealthAttributeUpdate(const FOnAttributeChangeData& Data)
 {
+	if (FMath::IsNearlyEqual(Data.NewValue, Data.OldValue))
+		return;
+
 	if (Data.NewValue > 0)
 	{
 		HealthChangedEvent(CharacterID, Data.NewValue / OnyxAttributeSet->GetMaxHealth());
@@ -153,16 +156,29 @@ void AOnyxCharacter::OnHealthAttributeUpdate(const FOnAttributeChangeData& Data)
 
 void AOnyxCharacter::OnManaAttributeUpdate(const FOnAttributeChangeData& Data)
 {
+	if (FMath::IsNearlyEqual(Data.NewValue, Data.OldValue))
+		return;
+
 	ManaChangedEvent(CharacterID, Data.NewValue / OnyxAttributeSet->GetMaxMana());
 }
 
 void AOnyxCharacter::OnShieldAttributeUpdate(const FOnAttributeChangeData& Data)
 {
+	if (FMath::IsNearlyEqual(Data.NewValue, Data.OldValue) || Data.NewValue < 0.f)
+		return;
+
 	ShieldChangedEvent(CharacterID, Data.NewValue / OnyxAttributeSet->GetMaxHealth());
+	if (FMath::IsNearlyEqual(Data.NewValue, 0.0f) && AbilitySystemComponent)
+	{
+		AbilitySystemComponent->RemoveGameplayCue(FGameplayTag::RequestGameplayTag(FName("GameplayCue.HealingShield")));
+	}
 }
 
 void AOnyxCharacter::OnOnyxAttributeUpdate(const FOnAttributeChangeData& Data)
 {
+	if (FMath::IsNearlyEqual(Data.NewValue, Data.OldValue))
+		return;
+
 	OnyxChangedEvent(CharacterID, Data.NewValue, Data.NewValue - Data.OldValue);
 }
 
@@ -189,7 +205,7 @@ void AOnyxCharacter::Dead()
 	{
 		DisableInput(PC);
 	}
-	
+
 
 	//Remove all active effects (Healing, mana regen ...)
 	FGameplayTagContainer TempTag;

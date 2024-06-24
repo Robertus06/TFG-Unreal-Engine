@@ -21,6 +21,18 @@ void UOnyxAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, 
 	{
 		NewValue = FMath::Clamp<float>(NewValue, 0.f, 1200.f);
 	}
+	if (Attribute == GetShieldAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, FLT_MAX);
+	}
+	if (Attribute == GetManaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxMana());
+	}
+	if (Attribute == GetHealthAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
+	}
 }
 
 void UOnyxAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
@@ -68,6 +80,10 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
 	}
+	else if (Data.EvaluatedData.Attribute == GetShieldAttribute())
+	{
+		SetShield(FMath::Clamp(GetShield(), 0.0f, FLT_MAX));
+	}
 
 
 	//Damage
@@ -107,7 +123,7 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 					}
 					DamageDone = 0.f;
 				}
-				GetShieldAttribute().SetNumericValueChecked(CurrentShield, this);
+				SetShield(CurrentShield);
 			}
 			const float NewHealth = GetHealth() - DamageDone;
 
@@ -159,7 +175,7 @@ void UOnyxAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 					}
 					DamageDone = 0.f;
 				}
-				GetShieldAttribute().SetNumericValueChecked(CurrentShield, this);
+				SetShield(CurrentShield);
 
 			}
 			const float NewHealth = GetHealth() - DamageDone;
